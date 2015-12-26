@@ -23,93 +23,58 @@
  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 */
-#ifndef F_CPU
-#define F_CPU 1000000ul
+
+
+
+/*
+   all the pins....
+ */
+#ifndef __DEF_M8_
+#define __DEF_M8_
+
+
+/* PINS BY PORT */
+#define BY_P_PC0 23
+#define BY_P_PC1 24
+#define BY_P_PC2 25
+#define BY_P_PC3 26
+#define BY_P_PC4 27
+#define BY_P_PC5 28
+#define BY_P_PC6 1
+// gibst nich....
+
+
+#define BY_P_PD0 2
+#define BY_P_PD1 3
+#define BY_P_PD2 4
+#define BY_P_PD3 5
+#define BY_P_PD4 6
+#define BY_P_PD5 11
+#define BY_P_PD6 12
+#define BY_P_PD7 13
+
+
+
+#define BY_P_PB0 14
+#define BY_P_PB1 15
+#define BY_P_PB2 16
+#define BY_P_PB3 17
+#define BY_P_PB4 18
+#define BY_P_PB5 19
+#define BY_P_PB6 9
+#define BY_P_PB7 10
+
+/* pins nach bedeutung */
+#define OC1A	15
+#define OC2	17
+#define OC1B	16
+
+/* analog in pins  */
+#define ADC0	23
+#define ADC1	24
+#define ADC2	25
+#define ADC3	26
+#define ADC4	27
+#define ADC5	28
+
 #endif
-
-#include<util/delay.h>
-
-
-#define POLL	2
-
-#define POLL_TIME_PER_STEP	3
-#define POLL_STEPS		40
-#define POLL_TIME_AFTER		150
-
-#define STD	1
-
-// doppelte werte
-#define DOUBLE_POLL	3
-
-
-unsigned char get_pin(unsigned char pin, unsigned char mode)
-{
-	if(mode == POLL)
-	{
-		unsigned char res = 0;
-		unsigned int i;
-		for(i=0;i<POLL_STEPS;i++)
-		{
-			res |= read_pin(pin);
-			_delay_ms(POLL_TIME_PER_STEP);
-			if(res)
-			{
-				break;
-			}
-		}
-		if(res)
-		{
-			_delay_ms(POLL_TIME_AFTER);
-		}
-		return res;
-	}
-	if(mode == DOUBLE_POLL)
-	{
-		unsigned char res = 0;
-		unsigned int i;
-		for(i=0;i<(POLL_STEPS*2);i++)
-		{
-			res |= read_pin(pin);
-			_delay_ms(POLL_TIME_PER_STEP);
-			if(res)
-			{
-				break;
-			}
-		}
-		if(res)
-		{
-			_delay_ms(POLL_TIME_AFTER*2);
-		}
-		return res;
-
-	}
-
-	if(mode == STD)
-	{
-		return read_pin(pin);
-	}
-	return read_pin(pin);
-}
-
-#define FAST_MODE	2
-#define	NORMAL_MODE	3
-#define	SLOW_MODE	4
-
-#define DELAY_PER_MEASURE	5 //ms
-#define MEASURES		4
-
-unsigned int analog_get(unsigned char pin, unsigned char mode)
-{
-	if(mode == STD || mode == 0)
-	{
-		return analog_read(pin);
-	}
-	unsigned char i;
-	unsigned int res=0;
-	for(i=0;i<MEASURES*mode;i++)
-	{
-		res+=analog_read(pin);
-		_delay_ms(DELAY_PER_MEASURE);
-	}
-	return res / (MEASURES*mode);
-}

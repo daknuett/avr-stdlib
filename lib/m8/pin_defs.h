@@ -23,93 +23,14 @@
  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 */
-#ifndef F_CPU
-#define F_CPU 1000000ul
+
+
+#ifndef __PIN_DEFS_H_
+#define __PIN_DEFS_H_
+
+#define PIN_OUT 1
+#define PIN_IN	0
+#define HIGH	1
+#define LOW	0
+
 #endif
-
-#include<util/delay.h>
-
-
-#define POLL	2
-
-#define POLL_TIME_PER_STEP	3
-#define POLL_STEPS		40
-#define POLL_TIME_AFTER		150
-
-#define STD	1
-
-// doppelte werte
-#define DOUBLE_POLL	3
-
-
-unsigned char get_pin(unsigned char pin, unsigned char mode)
-{
-	if(mode == POLL)
-	{
-		unsigned char res = 0;
-		unsigned int i;
-		for(i=0;i<POLL_STEPS;i++)
-		{
-			res |= read_pin(pin);
-			_delay_ms(POLL_TIME_PER_STEP);
-			if(res)
-			{
-				break;
-			}
-		}
-		if(res)
-		{
-			_delay_ms(POLL_TIME_AFTER);
-		}
-		return res;
-	}
-	if(mode == DOUBLE_POLL)
-	{
-		unsigned char res = 0;
-		unsigned int i;
-		for(i=0;i<(POLL_STEPS*2);i++)
-		{
-			res |= read_pin(pin);
-			_delay_ms(POLL_TIME_PER_STEP);
-			if(res)
-			{
-				break;
-			}
-		}
-		if(res)
-		{
-			_delay_ms(POLL_TIME_AFTER*2);
-		}
-		return res;
-
-	}
-
-	if(mode == STD)
-	{
-		return read_pin(pin);
-	}
-	return read_pin(pin);
-}
-
-#define FAST_MODE	2
-#define	NORMAL_MODE	3
-#define	SLOW_MODE	4
-
-#define DELAY_PER_MEASURE	5 //ms
-#define MEASURES		4
-
-unsigned int analog_get(unsigned char pin, unsigned char mode)
-{
-	if(mode == STD || mode == 0)
-	{
-		return analog_read(pin);
-	}
-	unsigned char i;
-	unsigned int res=0;
-	for(i=0;i<MEASURES*mode;i++)
-	{
-		res+=analog_read(pin);
-		_delay_ms(DELAY_PER_MEASURE);
-	}
-	return res / (MEASURES*mode);
-}

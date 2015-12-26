@@ -52,10 +52,21 @@ extern unsigned char get_pin(unsigned char pin, unsigned char mode);
 
 extern void analog_write(unsigned char pin, unsigned char value);
 
-extern int analog_read(unsigned char pin);
+extern unsigned int analog_read(unsigned char pin);
 
-#ifdef __DEV_M168_
+#define FAST_MODE	2
+#define	NORMAL_MODE	3
+#define	SLOW_MODE	4
+
+#define DELAY_PER_MEASURE	5 //ms
+#define MEASURES		4
+
+extern unsigned int analog_get(unsigned char pin,unsigned char mode);
+
+#if defined( __DEV_M168_)
 #include"pins_m168.h"
+#elif defined( __DEV_M8_)
+#include"pins_m8.h"
 #else
 #error "no valid device ( like __DEV_M168_ ) defined!"
 #endif
