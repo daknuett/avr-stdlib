@@ -4,6 +4,8 @@ CLFLAG= -c $(CFLAG)
 
 HFLAG= -mmcu=atmega168
 
+all:clean pins.h.gch usart.h.gch
+
 clean:
 	rm *.gch || true
 
@@ -12,3 +14,5 @@ disclaimer:
 
 pins.h.gch:
 	$(CC) $(HFLAG) pins.h
+usart.h.gch:
+	$(CC) $(HFLAG) usart.h

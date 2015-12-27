@@ -4,7 +4,7 @@ CLFLAG= -c $(CFLAG)
 
 HFLAG= -mmcu=atmega168
 
-all:digital.o analog.o
+all:digital.o analog.o usart.o
 
 clean:
 	rm *.a *.o || true
@@ -17,3 +17,6 @@ digital.o:clean
 	$(CC) $(CLFLAG) digital.o digital.c
 analog.o:digital.o
 	$(CC) $(CLFLAG) analog.o analog.c
+usart.o:
+	$(CC) $(CLFLAG) usart.o usart.c
+
