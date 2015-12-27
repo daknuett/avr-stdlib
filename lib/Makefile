@@ -1,14 +1,19 @@
 CC=avr-gcc
-CFLAG=  -mmcu=atmega168 -O -o
+CFLAG=  -O -o
 CLFLAG= -c $(CFLAG)
 
 
-HFLAG= -mmcu=atmega168
-
 all: pins 
 
-pins:devices
-	$(CC) $(CLFLAG) pins.o pins.c
+pins:devices pins_m8 pins_m168
+	echo "compiled">/dev/null
+
+pins_m168:
+	$(CC) -mmcu=atmega168  $(CLFLAG) pins.o pins.c &&\
+	mv pins.o m168/pins.o
+pins_m8:
+	$(CC) -mmcu=atmega8  $(CLFLAG) pins.o pins.c && \
+	mv pins.o m8/pins.o
 
 	
 devices:lib_m168 lib_m8
