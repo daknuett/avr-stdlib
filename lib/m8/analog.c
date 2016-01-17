@@ -45,7 +45,7 @@
 #define ADC5	28
 
 
-void analog_write(unsigned char pin,unsigned char value)
+void analog_write(unsigned char pin,unsigned int value)
 {
 	/* if pins do not support PWM, they are used in digial mode */
 	pin_mode(pin,PIN_OUT);
@@ -86,7 +86,9 @@ void analog_write(unsigned char pin,unsigned char value)
 		}
 		TCCR2 |= (1<<CS21);
 		TCCR2 |= (1<<COM21)|(1<<WGM20)|(1<<WGM21);
-		OCR2 = value;
+		// 8 bit width
+		unsigned char _value = value / 256;
+		OCR2 = _value;
 		return;
 	}
 	if(value>127)
@@ -108,52 +110,100 @@ unsigned int analog_read(unsigned char pin)
 	pin_mode(pin,PIN_IN);
 	if(pin == ADC0)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = 0;
+#else
+		ADMUX = (1<<REFS0);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		// I am sorry, but this will save a LOT of space!
 		goto adc_read;
 	}
 	if(pin == ADC1)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC2)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX1);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX1);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC3)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX1)|(1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX1);
+#endif
 		ADCSRA = (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC4)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX2);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX2);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC5)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0)|(1<<MUX2);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2)|(1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX2);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
-#ifdef ADC6
+#if defined( ADC6)
 	if(pin == ADC6)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX2)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2)|(1<<MUX1);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX2)|(1<<MUX1);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
-#ifdef ADC7
+#if defined( ADC7)
 	if(pin == ADC7)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0)|(1<<MUX2)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2)|(1<<MUX1)|(1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX2)|(1<<MUX1);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}

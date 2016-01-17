@@ -44,6 +44,14 @@
 extern void usart_begin(unsigned int ubrr);
 #elif defined(USART_INT_MODE)
 
+struct _FIFO_buffer;
+typedef struct _FIFO_buffer FIFO_buffer;
+
+extern volatile FIFO_buffer RX_buf;
+extern volatile FIFO_buffer TX_buf;
+extern volatile int RX_bytes;
+extern volatile int TX_bytes;
+extern void usart_begin(unsigned int ubrr);
 #else
 #error "no valid usart mode defined"
 #endif

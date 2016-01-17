@@ -48,7 +48,7 @@
 #define ADC5	28
 
 
-void analog_write(unsigned char pin,unsigned char value)
+void analog_write(unsigned char pin,unsigned int value)
 {
 	/* if pins do not support PWM, they are used in digial mode */
 	pin_mode(pin,PIN_OUT);
@@ -63,7 +63,9 @@ void analog_write(unsigned char pin,unsigned char value)
 		}
 		TCCR0A |= (1<<COM0A1)|(1<<WGM00)|(1<<WGM01)|(1<<WGM02);
 		TCCR0B |= (1<<CS01);
-		OCR0A=value;
+		// TIMER0 : 8bit
+		unsigned char _value = value / 256;
+		OCR0A = _value;
 		return;
 	}
 	if(pin == OC0B)
@@ -76,7 +78,9 @@ void analog_write(unsigned char pin,unsigned char value)
 		}
 		TCCR0A |= (1<<COM0B1)|(1<<WGM00)|(1<<WGM01)|(1<<WGM02);
 		TCCR0B |= (1<<CS01);
-		OCR0B=value;
+		// TIMER0 : 8bit
+		unsigned char _value = value / 256;
+		OCR0B = _value;
 		return;
 	}
 	if(pin == OC1A)
@@ -115,7 +119,9 @@ void analog_write(unsigned char pin,unsigned char value)
 		}
 		TCCR2A |= (1<<COM2A1)|(1<<WGM20)|(1<<WGM21)|(1<<WGM22);
 		TCCR2B |= (1<<CS21);
-		OCR2A=value;
+		// 8 bit
+		unsigned char _value = value / 256;
+		OCR2A = _value;
 		return;
 	}
 	if(pin == OC2B)
@@ -128,7 +134,9 @@ void analog_write(unsigned char pin,unsigned char value)
 		}
 		TCCR2A |= (1<<COM2B1)|(1<<WGM20)|(1<<WGM21)|(1<<WGM22);
 		TCCR2B |= (1<<CS21);
-		OCR2B=value;
+		// 8 bit
+		unsigned char _value = value / 256;
+		OCR2B = _value;
 		return;
 	}
 	if(value>127)
@@ -150,52 +158,100 @@ unsigned int analog_read(unsigned char pin)
 	pin_mode(pin,PIN_IN);
 	if(pin == ADC0)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = 0;
+#else
+		ADMUX = (1<<REFS0);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		// I am sorry, but this will save a LOT of space!
 		goto adc_read;
 	}
 	if(pin == ADC1)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC2)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX1);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX1);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC3)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX1)|(1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX1);
+#endif
 		ADCSRA = (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC4)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX2);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX2);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
 	if(pin == ADC5)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0)|(1<<MUX2);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2)|(1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX2);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
-#ifdef ADC6
+#if defined( ADC6)
 	if(pin == ADC6)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX2)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2)|(1<<MUX1);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX2)|(1<<MUX1);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
-#ifdef ADC7
+#if defined( ADC7)
 	if(pin == ADC7)
 	{
+#if defined( __USE_V_INT_)
 		ADMUX = (1<<REFS0)|(1<<REFS1)|(1<<MUX0)|(1<<MUX2)|(1<<MUX1);
+#elif defined( __USE_V_AREF_)
+		ADMUX = (1<<MUX2)|(1<<MUX1)|(1<<MUX0);
+#else
+		ADMUX = (1<<REFS0)|(1<<MUX0)|(1<<MUX2)|(1<<MUX1);
+#endif
 		ADCSRA |= (1<<ADEN)|(1<<ADSC)|(1<<ADPS2);
 		goto adc_read;
 	}
@@ -205,6 +261,9 @@ unsigned int analog_read(unsigned char pin)
 adc_read:
 	while(ADCSRA & (1<<ADSC));
 	ADCSRA |= (1<<ADSC);
+	// throw this away, it is just needed for a new run
+	res = ADCL;
+	res = ADCH;
 	while(ADCSRA & (1<<ADSC));
 	res = ADCL;
 	res |= (ADCH << 8);

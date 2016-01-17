@@ -1,36 +1,28 @@
 CC=avr-gcc
-CFLAG=  -mmcu=atmega168 -O -o  
+INCDIR=`pwd`/include
+std_LIBDIR = ./lib
 
-LIBDIR = ./lib
+include config/Makefile.inc
+%.elf: %.c libs
+	$(CC) $(CFLAG) $@ $(LIBS) $<
+i%.elf: %.elf
+	avrdude -p '$(DEVICE)' -c avrispmkii  -U flash:w:$<:a
 
-m168_LIBDIR= $(LIBDIR)/m168
-
-m8_LIBDIR= $(LIBDIR)/m8
-
-m168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o
-
-m8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o
-
-m168_USART= $(m168_LIBDIR)/usart.o
-m8_USART= $(m8_LIBDIR)/usart.o
-
-
-blink_test: libs
-	$(CC) $(CFLAG) blinktest.elf  $(m168_LIBS)  blinktest.c
-
-blink_testi:blink_test
-	avrdude -p 'm168' -c avrispmkii  -U flash:w:blinktest.elf:a	
+clean:
+	cd lib/ && make clean && cd ..
 
 libs:
-	cd lib; make -s || make
+	cd lib && make -s || make
 
-blink_test_m8: libs
-	$(CC) $(CFLAG) blinktest_m8.elf  $(m8_LIBS)  blinktest_m8.c
 
-blink_test_m8i:blink_test
-	avrdude -p 'm8' -c avrispmkii  -U flash:w:blinktest_m8.elf:a	
+CONFIGDIR = `pwd`/config
+SUBCONFIGDIRS = lib/m168/config lib/m8/config lib/config
+SUBCONFIG_LINKS = $(addsuffix /project_config,$(SUBCONFIGDIRS)) 
 
-usart_test: libs
-	$(CC) $(CFLAG) usart_test.elf $(m168_USART)  $(m168_LIBS) usart_test.c
-usart_testi:usart_test
-	avrdude -p 'm168' -c avrispmkii  -U flash:w:usart_test.elf:a
+init: $(SUBCONFIG_LINKS)
+
+$(SUBCONFIG_LINKS):
+	echo "GLOBAL_CONFIG = $(CONFIGDIR)" >  $@
+
+uninit: 
+	find . -name project_config -exec rm -f {} \;

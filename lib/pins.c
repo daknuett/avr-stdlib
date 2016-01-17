@@ -24,7 +24,7 @@
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 */
 #ifndef F_CPU
-#define F_CPU 1000000ul
+#define F_CPU 8000000ul
 #endif
 
 #include<util/delay.h>

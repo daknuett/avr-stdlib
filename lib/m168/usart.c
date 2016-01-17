@@ -30,9 +30,6 @@
 #include<avr/interrupt.h>
 #include<avr/io.h>
 
-// for test: POLL MODE
-#define USART_POLL_MODE
-
 
 /* POLL MODE */
 #if defined( USART_POLL_MODE)
@@ -60,25 +57,116 @@ void usart_begin(unsigned int ubrr)
 	// 1 byte data, 1 stop bit
 	UCSR0C = ( 1 << UCSZ00) | ( 1 << UCSZ01);
 }
-#elif defined( USART_INT_MODE)
-// TODO implement this
 
-#endif
-
-/* all the same */
 void usart_putc(char chr)
 {
 	// still transmitting
-	while(UCSR0A & (1 << UDRE0 ));
+	while(!(UCSR0A & (1 << UDRE0 )));
 	UDR0 = chr;
 }
 
 char usart_getc(void)
 {
 	// still receiving
-	while(UCSR0A & ( 1 << RXC0 ));
+	while(!(UCSR0A & ( 1 << RXC0 )));
 
 	return UDR0;
 }
+#elif defined( USART_INT_MODE)
+// XXX test this
+
+#include<avr/interrupt.h>
+
+void usart_begin(unsigned int ubrr)
+{
+	// refer to manual: interrupts should be turned of
+	cli();
+	// set baud
+	UBRR0H = (unsigned char) ( ubrr >> 8 ); // high bits
+	UBRR0L = (unsigned char) ( ubrr );
+
+	// enable RX and TX
+	UCSR0B = ( 1 << RXEN0 )|( 1 << TXEN0 );
+
+	// frame format
+	// 1 byte data, 1 stop bit
+	UCSR0C = ( 1 << UCSZ00) | ( 1 << UCSZ01);
+
+	// enable interrupt channels
+	UCSR0B |= ( 1 << RXCIE0 ) | ( 1 << UDRIE0 );
+	sei();
+}
+
+
+struct _FIFO_buffer
+{
+	char buffer[IO_BUF_S];
+	int head , tail ;
+};
+
+typedef struct _FIFO_buffer FIFO_buffer;
+
+volatile FIFO_buffer RX_buf;
+volatile FIFO_buffer TX_buf;
+volatile int RX_bytes = 0;
+volatile int TX_bytes = 0;
+
+void FIFO_buffer_putc(FIFO_buffer *  buffer,char chr)
+{
+	int pos = buffer->head % IO_BUF_S;
+	if(pos == buffer->tail - 1)
+	{
+		return;
+	}
+	buffer->buffer[pos] = chr;
+	buffer->head = ( buffer->head + 1) % IO_BUF_S;
+}
+char FIFO_buffer_getc(FIFO_buffer * buffer)
+{
+	int pos = buffer->tail % IO_BUF_S;
+	buffer->tail = (pos + 1) % IO_BUF_S;
+	return buffer->buffer[pos];
+}
+
+ISR(USART_RX_vect)
+{
+	FIFO_buffer_putc(&RX_buf,UDR0);
+	RX_bytes++;
+}
+ISR(USART_UDRE_vect)
+{
+	if(!(TX_bytes <= 0))
+	{
+		UDR0 = FIFO_buffer_getc(&TX_buf);
+		TX_bytes--;
+	}
+	else
+	{
+		UCSR0B &= ~(1<<UDRIE0);
+	}
+}
+
+void usart_putc(char chr)
+{
+	FIFO_buffer_putc(&TX_buf,chr);
+	UCSR0B |= (1<<UDRIE0);
+	TX_bytes++;
+}
+
+char usart_getc(void)
+{
+	if(!(RX_bytes<=0))
+	{
+		char chr = FIFO_buffer_getc(&RX_buf);
+		RX_bytes--;
+		return chr;
+	}
+	return -1;
+}
+
+#else
+#error "no valid USART mode defined!"
+#endif
+
 
 
