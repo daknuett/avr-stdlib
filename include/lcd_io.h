@@ -24,41 +24,19 @@
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 */
 
+#include<stdio.h>
 
-#ifndef __USART_H_
-#define __USART_H_
+#ifndef __lcd_io_h_
+#define __lcd_io_h_
 
-#include "../config/usart_config.h"
+extern void lcd_fputc(char _c, FILE * stream);
 
-#ifndef BAUD
-#warning "warning: no BAUD defined: using 9600"
-#define BAUD 9600
+static FILE  lcd_stdout =  FDEV_SETUP_STREAM(lcd_fputc,NULL,_FDEV_SETUP_WRITE);
+
+#ifdef __USE_LCD_ONLY
+stdout = &lcd_stdout;
 #endif
 
-#ifndef F_CPU
-#warning "warning: no F_CPU defined: using 1000000"
-#define F_CPU 1000000ul
-#endif
-
-#define UBRR_VAL (F_CPU/8/BAUD-1)/2
-
-#if defined(USART_POLL_MODE)
-extern void usart_begin(unsigned int ubrr);
-#elif defined(USART_INT_MODE)
-
-struct _FIFO_buffer;
-typedef struct _FIFO_buffer FIFO_buffer;
-
-extern volatile FIFO_buffer RX_buf;
-extern volatile FIFO_buffer TX_buf;
-extern volatile int RX_bytes;
-extern volatile int TX_bytes;
-extern void usart_begin(unsigned int ubrr);
-#else
-#error "no valid usart mode defined"
-#endif
-
-extern void usart_putc(char chr);
-extern char usart_getc(void);
 
 #endif
+

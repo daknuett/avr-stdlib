@@ -34,15 +34,17 @@ echo "generating config/Makefile.inc"
 
 printf ' m168_CFLAG = -I $(INCDIR) -mmcu=atmega168 -O -o  \n m8_CFLAG =- I $(INCDIR) -mmcu=atmega8 -O -o  \n \n \n m168_LIBDIR= $(std_LIBDIR)/m168\n \n m8_LIBDIR= $(std_LIBDIR)/m8\n \n m168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o\n \n m8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o\n \n m168_USART= $(m168_LIBDIR)/usart.o\n m8_USART= $(m8_LIBDIR)/usart.o\n \n m8_USART_IO= $(m8_LIBDIR)/usart_io.o\n m168_USART_IO= $(m168_LIBDIR)/usart_io.o\n ' > config/Makefile.inc
 
+printf 'm168_ONEWIRE = $(m168_LIBDIR)/one_wire.o\nm8_ONEWIRE = $(m8_LIBDIR)/one_wire.o\nm168_LCD = $(m168_LIBDIR)/lcd.o\nm8_LCD = $(m8_LIBDIR)/lcd.o\nm168_LCD_IO = $(m168_LIBDIR)/lcd_io.o\nm8_LCD_IO = $(m8_LIBDIR)/lcd_io.o\n' >> config/Makefile.inc
+
 printf "use m168? "
 read use_m168
 if [[ "$use_m168" == "y" ]]
 then
-	printf 'LIBDIR = $(m168_LIBDIR)\nCFLAG = $(m168_CFLAG)\nLIBS = $(m168_LIBS)\nUSART = $(m168_USART)\nUSART_IO = $(m168_USART_IO)\n' >> config/Makefile.inc
+	printf 'LIBDIR = $(m168_LIBDIR)\nCFLAG = $(m168_CFLAG)\nLIBS = $(m168_LIBS)\nUSART = $(m168_USART)\nUSART_IO = $(m168_USART_IO)\nONEWIRE = $(m168_ONEWIRE)\nLCD = $(m168_LCD)\nLCD_IO = $(m168_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m168\n" >> config/Makefile.inc
 else 
 	echo "using m8"
-	printf 'LIBDIR = $(m8_LIBDIR)\nCFLAG = $(m8_CFLAG)\nLIBS = $(m8_LIBS)\nUSART = $(m8_USART)\nUSART_IO = $(m8_USART_IO)\n' >> config/Makefile.inc
+	printf 'LIBDIR = $(m8_LIBDIR)\nCFLAG = $(m8_CFLAG)\nLIBS = $(m8_LIBS)\nUSART = $(m8_USART)\nUSART_IO = $(m8_USART_IO)\nONEWIRE = $(m8_ONEWIRE)\nLCD = $(m8_LCD)\nLCD_IO = $(m18_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m8\n" >> config/Makefile.inc
 fi
 
@@ -51,6 +53,18 @@ read link_usart
 if [[ "$link_usart" == "y" ]]
 then
 	printf 'LIBS += $(USART) $(USART_IO)\n' >> config/Makefile.inc
+fi
+printf "always link to onewire? "
+read link_onewire
+if [[ "$link_onewire" == "y" ]]
+then
+	printf 'LIBS += $(ONEWIRE)\n' >> config/Makefile.inc
+fi
+printf "always link to lcd and lcd_io? "
+read link_lcd
+if [[ "$link_lcd" == "y" ]]
+then
+	printf 'LIBS += $(LCD) $(LCD_IO)\n' >> config/Makefile.inc
 fi
 
 printf "\n\n\n"

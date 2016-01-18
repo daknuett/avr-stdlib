@@ -4,7 +4,7 @@ CFLAG= -I $(INCDIR) -O -o
 CLFLAG= -c $(CFLAG)
 
 
-all: pins  usart_m168 usart_m8
+all: pins  usart_m168 usart_m8 lcd_m168 lcd_m8
 
 pins:devices pins_m8 pins_m168
 	echo "compiled">/dev/null
@@ -22,6 +22,12 @@ usart_m168:
 usart_m8:
 	$(CC) -mmcu=atmega8 $(CLFLAG) usart_io.o usart_io.c &&\
 	mv usart_io.o m8/usart_io.o
+lcd_m168:
+	$(CC) -mmcu=atmega168 $(CLFLAG) lcd_io.o lcd_io.c &&\
+	mv lcd_io.o m168/lcd_io.o
+lcd_m8:
+	$(CC) -mmcu=atmega8 $(CLFLAG) lcd_io.o lcd_io.c &&\
+	mv lcd_io.o m8/lcd_io.o
 
 	
 devices:lib_m168 lib_m8

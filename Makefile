@@ -3,6 +3,7 @@ INCDIR=`pwd`/include
 std_LIBDIR = ./lib
 
 include config/Makefile.inc
+
 %.elf: %.c libs
 	$(CC) $(CFLAG) $@ $(LIBS) $<
 i%.elf: %.elf

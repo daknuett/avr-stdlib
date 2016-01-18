@@ -25,40 +25,18 @@
 */
 
 
-#ifndef __USART_H_
-#define __USART_H_
+/* usart_io.c provide usart_fputc and usart_fgetc for printf 
+ implementation is independent from usart.c
+ */
 
-#include "../config/usart_config.h"
+#include<stdio.h>
 
-#ifndef BAUD
-#warning "warning: no BAUD defined: using 9600"
-#define BAUD 9600
-#endif
+void usart_fputc(char _c, FILE * stream)
+{
+	usart_putc(_c);
+}
 
-#ifndef F_CPU
-#warning "warning: no F_CPU defined: using 1000000"
-#define F_CPU 1000000ul
-#endif
-
-#define UBRR_VAL (F_CPU/8/BAUD-1)/2
-
-#if defined(USART_POLL_MODE)
-extern void usart_begin(unsigned int ubrr);
-#elif defined(USART_INT_MODE)
-
-struct _FIFO_buffer;
-typedef struct _FIFO_buffer FIFO_buffer;
-
-extern volatile FIFO_buffer RX_buf;
-extern volatile FIFO_buffer TX_buf;
-extern volatile int RX_bytes;
-extern volatile int TX_bytes;
-extern void usart_begin(unsigned int ubrr);
-#else
-#error "no valid usart mode defined"
-#endif
-
-extern void usart_putc(char chr);
-extern char usart_getc(void);
-
-#endif
+char usart_fgetc(FILE * stream)
+{
+	return usart_getc();
+}
