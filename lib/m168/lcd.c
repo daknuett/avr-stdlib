@@ -118,12 +118,12 @@ void lcd_begin(void)
 
 void lcd_set_cursor(char line,char col)
 {
-	if(line > 4)
+	if(line > LCD_LINES)
 	{
 		lcd_put_com(LCD_CLEAR);
 	}
 	// only 4 lines
-	line %= 5;
+	line %= LCD_LINES + 1;
 	lcd_cursor_line = line;
 	char addr = 0;
 	switch(line)
@@ -154,6 +154,10 @@ void lcd_putc(char __c)
 	if(__c == '\n')
 	{
 		lcd_set_cursor(lcd_cursor_line+1,0);
+	}
+	else if(__c == '\r')
+	{
+		lcd_set_cursor(lcd_cursor_line,0);
 	}
 	else
 	{

@@ -18,13 +18,14 @@ void setup(void)
 void loop(void)
 {
 	unsigned int val = analog_get(26,NORMAL_MODE);
-	printf("pin 25: %d.%d\n",pseudo_float(no_float(voltage(val,5),100),100));
-	_delay_ms(1000);
+	printf("pin 26: %d.%d   \r",pseudo_float(no_float(voltage(val,5),100),100));
+	_delay_ms(10);
 }
 
 int main(void)
 {
 	setup();
+	printf("Reading 16bit ADC\n");
 	while(1)
 	{
 		loop();
