@@ -111,7 +111,7 @@ volatile FIFO_buffer TX_buf;
 volatile int RX_bytes = 0;
 volatile int TX_bytes = 0;
 
-void FIFO_buffer_putc(FIFO_buffer *  buffer,char chr)
+void FIFO_buffer_putc(volatile FIFO_buffer *  buffer,char chr)
 {
 	int pos = buffer->head % IO_BUF_S;
 	if(pos == buffer->tail - 1)
@@ -121,7 +121,7 @@ void FIFO_buffer_putc(FIFO_buffer *  buffer,char chr)
 	buffer->buffer[pos] = chr;
 	buffer->head = ( buffer->head + 1) % IO_BUF_S;
 }
-char FIFO_buffer_getc(FIFO_buffer * buffer)
+char FIFO_buffer_getc(volatile FIFO_buffer * buffer)
 {
 	int pos = buffer->tail % IO_BUF_S;
 	buffer->tail = (pos + 1) % IO_BUF_S;
