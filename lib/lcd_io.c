@@ -25,11 +25,11 @@
 */
 
 
-#ifndef __CALCULATIONS_H_
-#define __CALCULATIONS_H_
 
-#define voltage(value,ref) (((double)value * ref)/1023.0)  
-#define no_float(value,shift) ((int)(value * shift))
-#define pseudo_float(value,shift) value / shift, (value % shift) >= 0 ? (value % shift) : (value % shift)* -1
+#include<stdio.h>
 
-#endif
+void lcd_fputc(char _c, FILE * stream)
+{
+	lcd_putc(_c);
+}
+

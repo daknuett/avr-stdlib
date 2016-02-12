@@ -7,7 +7,7 @@ CLFLAG= -c $(CFLAG)
 include config/project_config
 HFLAG= -mmcu=atmega168
 
-objects = digital.o analog.o usart.o one_wire.o lcd.o
+objects = digital.o analog.o usart.o  lcd.o
 
 all: $(objects)
 

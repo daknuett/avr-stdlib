@@ -8,5 +8,6 @@ extern void lcd_put_com(char com);
 extern void lcd_begin(void);
 extern void lcd_set_cursor(char line,char col);
 extern void lcd_puts(const char * str);
+extern void lcd_clear(void);
 
 #endif

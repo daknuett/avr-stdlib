@@ -54,6 +54,7 @@ extern volatile FIFO_buffer TX_buf;
 extern volatile int RX_bytes;
 extern volatile int TX_bytes;
 extern void usart_begin(unsigned int ubrr);
+
 #else
 #error "no valid usart mode defined"
 #endif
@@ -61,4 +62,5 @@ extern void usart_begin(unsigned int ubrr);
 extern void usart_putc(char chr);
 extern char usart_getc(void);
 
+extern unsigned int usart_available(void);
 #endif

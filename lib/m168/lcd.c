@@ -34,7 +34,9 @@
 #define LCD_TRIG 20 //us
 #define __DEV_M168_
 #include<pins.h>
-#define F_CPU 1000000ul
+#ifndef F_CPU
+	#define F_CPU 1000000ul
+#endif
 #include<util/delay.h>
 
 #include"lcd_config.h"
@@ -147,6 +149,12 @@ void lcd_set_cursor(char line,char col)
 	lcd_cursor_col = col;
 	lcd_put_com(0b10000000 | addr);
 	
+}
+
+void lcd_clear(void)
+{
+	lcd_set_cursor(0,0);
+	lcd_put_com(1);
 }
 
 void lcd_putc(char __c)

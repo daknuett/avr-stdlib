@@ -32,20 +32,22 @@ fi
 
 echo "generating config/Makefile.inc"
 
-printf ' m168_CFLAG = -I $(INCDIR) -mmcu=atmega168 -O -o  \n m8_CFLAG =- I $(INCDIR) -mmcu=atmega8 -O -o  \n \n \n m168_LIBDIR= $(std_LIBDIR)/m168\n \n m8_LIBDIR= $(std_LIBDIR)/m8\n \n m168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o\n \n m8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o\n \n m168_USART= $(m168_LIBDIR)/usart.o\n m8_USART= $(m8_LIBDIR)/usart.o\n \n m8_USART_IO= $(m8_LIBDIR)/usart_io.o\n m168_USART_IO= $(m168_LIBDIR)/usart_io.o\n ' > config/Makefile.inc
+printf 'm168_CFLAG = -I $(INCDIR) -mmcu=atmega168 -O -o  \nm8_CFLAG =- I $(INCDIR) -mmcu=atmega8 -O -o  \n \n \nm168_LIBDIR= $(std_LIBDIR)/m168\n \nm8_LIBDIR= $(std_LIBDIR)/m8\n \nm168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o\n \nm8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o\n \nm168_USART= $(m168_LIBDIR)/usart.o \nm8_USART= $(m8_LIBDIR)/usart.o\n \nm8_USART_IO= $(m8_LIBDIR)/usart_io.o \nm168_USART_IO= $(m168_LIBDIR)/usart_io.o\nextra_LIBDIR = $(std_LIBDIR)/extra\n ' > config/Makefile.inc
 
-printf 'm168_ONEWIRE = $(m168_LIBDIR)/one_wire.o\nm8_ONEWIRE = $(m8_LIBDIR)/one_wire.o\nm168_LCD = $(m168_LIBDIR)/lcd.o\nm8_LCD = $(m8_LIBDIR)/lcd.o\nm168_LCD_IO = $(m168_LIBDIR)/lcd_io.o\nm8_LCD_IO = $(m8_LIBDIR)/lcd_io.o\n' >> config/Makefile.inc
+printf 'extra_ONEWIRE = $(extra_LIBDIR)/one_wire.o\nm168_LCD = $(m168_LIBDIR)/lcd.o\nm8_LCD = $(m8_LIBDIR)/lcd.o\nm168_LCD_IO = $(m168_LIBDIR)/lcd_io.o\nm8_LCD_IO = $(m8_LIBDIR)/lcd_io.o\n' >> config/Makefile.inc
 
 printf "use m168? "
 read use_m168
 if [[ "$use_m168" == "y" ]]
 then
-	printf 'LIBDIR = $(m168_LIBDIR)\nCFLAG = $(m168_CFLAG)\nLIBS = $(m168_LIBS)\nUSART = $(m168_USART)\nUSART_IO = $(m168_USART_IO)\nONEWIRE = $(m168_ONEWIRE)\nLCD = $(m168_LCD)\nLCD_IO = $(m168_LCD_IO)\n' >> config/Makefile.inc
+	printf 'LIBDIR = $(m168_LIBDIR)\nCFLAG = $(m168_CFLAG)\nLIBS = $(m168_LIBS)\nUSART = $(m168_USART)\nUSART_IO = $(m168_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(m168_LCD)\nLCD_IO = $(m168_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m168\n" >> config/Makefile.inc
+	printf "MMCU = atmega168\n" >> config/device
 else 
 	echo "using m8"
-	printf 'LIBDIR = $(m8_LIBDIR)\nCFLAG = $(m8_CFLAG)\nLIBS = $(m8_LIBS)\nUSART = $(m8_USART)\nUSART_IO = $(m8_USART_IO)\nONEWIRE = $(m8_ONEWIRE)\nLCD = $(m8_LCD)\nLCD_IO = $(m18_LCD_IO)\n' >> config/Makefile.inc
+	printf 'LIBDIR = $(m8_LIBDIR)\nCFLAG = $(m8_CFLAG)\nLIBS = $(m8_LIBS)\nUSART = $(m8_USART)\nUSART_IO = $(m8_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(m8_LCD)\nLCD_IO = $(m18_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m8\n" >> config/Makefile.inc
+	printf "MMCU = atmega8\n" >> config/device
 fi
 
 printf "always link to usart and usart_io? "
@@ -59,6 +61,18 @@ read link_onewire
 if [[ "$link_onewire" == "y" ]]
 then
 	printf 'LIBS += $(ONEWIRE)\n' >> config/Makefile.inc
+	printf "Enter ONE_WIRE_PORT (PORTB|PORTC|PORTD)"
+	read one_wire_port
+	printf "Enter ONE_WIRE_PIN (PINB|PINC|PIND)"
+	read one_wire_pin
+	printf "Enter ONE_WIRE_DDR (DDRB|DDRC|DDRD)"
+	read one_wire_ddr
+	printf "Enter ONE_WIRE_PINNO (PC0|PC1|PB0|...)"
+	read one_wire_pinno
+
+	printf "#ifndef __ONE_WIRE_CONFIG_H_\n#define __ONE_WIRE_CONFIG_H_\n#define ONE_WIRE_PORT $one_wire_port\n #define ONE_WIRE_PIN $one_wire_pin \n#define ONE_WIRE_DDR $one_wire_ddr\n#define ONE_WIRE_PINNO $one_wire_pinno\n#endif\n" >> config/config.h
+	
+
 fi
 printf "always link to lcd and lcd_io? "
 read link_lcd
@@ -78,6 +92,10 @@ case $vref in
 	a ) echo "Avcc"; printf "#define __USE_V_AVCC_\n" >> config/config.h ;;
 	*) echo "use e|i|a : abort"; exit 1;;
 esac
+
+printf "F_CPU? "
+read fcpu
+printf "#define F_CPU $fcpu\n" >> config/config.h
 printf "\n\n\n\n"
 echo "finishing config/config.h and config/usart_config.h"
 printf "#endif\n" >> config/config.h

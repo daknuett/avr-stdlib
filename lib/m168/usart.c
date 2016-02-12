@@ -72,6 +72,12 @@ char usart_getc(void)
 
 	return UDR0;
 }
+
+// we will block the system, but there could be data
+unsigned char usart_available(void)
+{
+	return 1;
+}
 #elif defined( USART_INT_MODE)
 // XXX test this
 
@@ -164,6 +170,10 @@ char usart_getc(void)
 	return -1;
 }
 
+unsigned char usart_available(void)
+{
+	return RX_bytes;
+}
 #else
 #error "no valid USART mode defined!"
 #endif

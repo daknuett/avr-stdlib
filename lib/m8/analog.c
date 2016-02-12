@@ -58,7 +58,7 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR1A |= (1<<COM1A1)|(1<<WGM10)|(1<<WGM11)|(1<<WGM12);
+		TCCR1A |= (1<<COM1A1)|(1<<WGM10);
 		TCCR1B |= (1<<CS11);
 		OCR1A=value;
 		return;
@@ -71,7 +71,7 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR1A |= (1<<COM1B1)|(1<<WGM10)|(1<<WGM11)|(1<<WGM12);
+		TCCR1A |= (1<<COM1B1)|(1<<WGM10);
 		TCCR1B |= (1<<CS11);
 		OCR1B = value;
 		return;
@@ -85,7 +85,7 @@ void analog_write(unsigned char pin,unsigned int value)
 			return;
 		}
 		TCCR2 |= (1<<CS21);
-		TCCR2 |= (1<<COM21)|(1<<WGM20)|(1<<WGM21);
+		TCCR2 |= (1<<COM21)|(1<<WGM20);
 		// 8 bit width
 		unsigned char _value = value / 256;
 		OCR2 = _value;

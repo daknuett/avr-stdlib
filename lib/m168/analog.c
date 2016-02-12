@@ -52,6 +52,12 @@ void analog_write(unsigned char pin,unsigned int value)
 {
 	/* if pins do not support PWM, they are used in digial mode */
 	pin_mode(pin,PIN_OUT);
+	if(value == 255)
+	{
+		write_pin(pin,1);
+		return;
+	}
+
 
 	if(pin == OC0A)
 	{
@@ -61,10 +67,10 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR0A |= (1<<COM0A1)|(1<<WGM00)|(1<<WGM01)|(1<<WGM02);
+		TCCR0A |= (1<<COM0A1)|(1<<WGM00);
 		TCCR0B |= (1<<CS01);
 		// TIMER0 : 8bit
-		unsigned char _value = value / 256;
+		unsigned char _value = value ;
 		OCR0A = _value;
 		return;
 	}
@@ -76,10 +82,10 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR0A |= (1<<COM0B1)|(1<<WGM00)|(1<<WGM01)|(1<<WGM02);
+		TCCR0A |= (1<<COM0B1)|(1<<WGM00);
 		TCCR0B |= (1<<CS01);
 		// TIMER0 : 8bit
-		unsigned char _value = value / 256;
+		unsigned char _value = value ;
 		OCR0B = _value;
 		return;
 	}
@@ -91,7 +97,7 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR1A |= (1<<COM1A1)|(1<<WGM10)|(1<<WGM11)|(1<<WGM12);
+		TCCR1A |= (1<<COM1A1)|(1<<WGM10);
 		TCCR1B |= (1<<CS11);
 		OCR1A=value;
 		return;
@@ -104,7 +110,7 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR1A |= (1<<COM1B1)|(1<<WGM10)|(1<<WGM11)|(1<<WGM12);
+		TCCR1A |= (1<<COM1B1)|(1<<WGM10);
 		TCCR1B |= (1<<CS11);
 		OCR1B=value;
 		return;
@@ -117,10 +123,10 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR2A |= (1<<COM2A1)|(1<<WGM20)|(1<<WGM21)|(1<<WGM22);
+		TCCR2A |= (1<<COM2A1)|(1<<WGM20);
 		TCCR2B |= (1<<CS21);
 		// 8 bit
-		unsigned char _value = value / 256;
+		unsigned char _value = value ;
 		OCR2A = _value;
 		return;
 	}
@@ -132,10 +138,10 @@ void analog_write(unsigned char pin,unsigned int value)
 			write_pin(pin,value);
 			return;
 		}
-		TCCR2A |= (1<<COM2B1)|(1<<WGM20)|(1<<WGM21)|(1<<WGM22);
+		TCCR2A |= (1<<COM2B1)|(1<<WGM20);
 		TCCR2B |= (1<<CS21);
 		// 8 bit
-		unsigned char _value = value / 256;
+		unsigned char _value = value ;
 		OCR2B = _value;
 		return;
 	}
