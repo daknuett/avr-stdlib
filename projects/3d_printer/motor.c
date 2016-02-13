@@ -106,7 +106,7 @@ void motor_vdrive(MotorFD motor,float speed, float calib)
 	set_motor(motor,(int) speed);
 }
 /* drive ``speed'' cm/s */
-motor_vdrive_cm_s(MotorFD motor,float speed, float calib)
+void motor_vdrive_cm_s(MotorFD motor,float speed, float calib)
 {
 	motor_vdrive(motor,speed * 127,calib);
 }
@@ -114,7 +114,7 @@ motor_vdrive_cm_s(MotorFD motor,float speed, float calib)
 /* XXX blocking
  	speed : in mm / s
  */
-motor_bsdrive_mm(MotorFD motor, float speed, float calib, float mm)
+void motor_bsdrive_mm(MotorFD motor, float speed, float calib, float mm)
 {
 	/*||   s = v * t  =>  t = s / v  ||
 	  ||   time in s                 ||*/
