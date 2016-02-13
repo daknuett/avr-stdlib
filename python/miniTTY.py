@@ -1,6 +1,6 @@
 #!/usr/bin/python3.5
 import sys,threading
-import getch
+import getch,curses
 from miniTTY_serialIO import *
 import time
 
@@ -86,6 +86,12 @@ class Screen(object):
 		for i in range(self.height):
 			res += "\r{} | {}\n".format(self.output[i],self.inpt[i])
 		return res
+	def scr_list(self):
+		res = ["#" * self.width]
+		for i in range(self.height):
+			res.append( "\r{} | {}\n".format(self.output[i],self.inpt[i]))
+		return res
+
 
 	def output_puts(self,_str):
 		for i in _str:
@@ -124,21 +130,44 @@ class MiniTTY(object):
 	def __init__(self,port, baudrate = 9600, height = 40, width = 100, autorefresh_time = 0.1, RW_timeout = 0.3,read_time = 0.5,*args,encoding = "ascii", PS1 = "$ "):
 		# to avoid messy output
 		self.refresh_lock = threading.Lock()
+		# we want a display!
+		self.display = None
 		self.screen = Screen(height,width)
 		self.autorefresh_time = autorefresh_time
 		self.async_serial = AsyncSerial(port = port,baudrate = baudrate, timeout = RW_timeout)
 		self.async_serial.async_write_to(self.screen.output_putc,read_time)
 		self.autorefresher = threading.Thread(target = self.autorefresh, daemon = True )
-		self.autorefresher.start()
+#		self.autorefresher.start()
 		self.buf = ""
 		self.encoding = encoding
 		self.PS1 = PS1
 		self.screen.input_puts(self.PS1)
+
+
+		self.lookup = {curses.KEY_BACKSPACE:"\b",
+			curses.KEY_DC:"\b",
+			curses.KEY_ENTER:"\n",
+			curses.KEY_EXIT:chr(0x03),
+			curses.KEY_UP:"\b",
+			curses.KEY_DOWN:"\b",
+			curses.KEY_LEFT:"\b",
+			curses.KEY_RIGHT:" ",
+			curses.KEY_BREAK: chr(0x03),
+			curses.KEY_CANCEL:chr(0x03)}
+
+	def start(self,display):
+		self.display = display
 		self.refresh()
+		self.main()
 	def refresh(self):
 		self.refresh_lock.acquire()
-		self.screen.delscreen()
-		print( str(self.screen))
+		self.display.clear()
+		for lineno,line in enumerate(self.screen.scr_list()):
+			self.display.addstr(lineno,0,line)
+		# display cursor
+		curses.setsyx(self.screen.input_cursor[0] + 1 ,self.screen.input_cursor[1] + self.screen.output_width + 3)
+
+		self.display.refresh()
 		self.refresh_lock.release()
 	def autorefresh(self):
 		while(1):
@@ -151,7 +180,7 @@ class MiniTTY(object):
 			self.screen.input_puts(self.PS1)
 			return
 		self.buf += _c
-		if(_c == "\r"):
+		if(_c == "\r" or _c == "\n"):
 			res = self.async_serial.write(self.buf.encode(self.encoding))
 			self.buf = ""
 			self.screen.input_puts("\nOK wrote {} bytes\n".format(res))
@@ -159,10 +188,22 @@ class MiniTTY(object):
 		else:
 			self.screen.input_putc(_c)
 		self.refresh()
+	def main(self):
+		while(1):
+			try:
+				c = self.display.getch()
+				# Crtl+D
+				if(c == 0x04):
+					return
+				try:
+					self.putc(self.lookup[c])
+				except KeyError:
+					self.putc(chr(c))
+			except KeyboardInterrupt as e:
+				self.putc(chr(0x03))
 
 
 if __name__ == "__main__":
-	getc = getch._Getch()
 	port = "/dev/ttyACM0"
 	baud = 9600
 	if(len(sys.argv) > 1):
@@ -170,12 +211,4 @@ if __name__ == "__main__":
 	if(len(sys.argv) > 2):
 		baud = int(sys.argv[2])
 	tty = MiniTTY(port = port,baudrate = baud, autorefresh_time = 1 )
-#	tty.autorefresh()
-	while(1):
-		try:
-			c = getc()
-			tty.putc(c)
-		except KeyboardInterrupt as e:
-			if(e.args[0] == '\x04'):
-				break
-			tty.putc(chr(0x03))
+	curses.wrapper(tty.start)
