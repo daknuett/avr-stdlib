@@ -7,7 +7,7 @@ include config/project_config
 
 include $(GLOBAL_CONFIG)/device
 
-objects = one_wire.o themp_ds18b20.o wait.o
+objects = one_wire.o themp_ds18b20.o wait.o motor.o
 
 all: $(objects)
 
