@@ -24,7 +24,7 @@
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 */
 
-/* vim: set syntax=c   */
+/* vim: set syntax=c:   */
 #ifndef __WAIT_H_
 #define __WAIT_H_
 
