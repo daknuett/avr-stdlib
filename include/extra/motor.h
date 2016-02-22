@@ -6,7 +6,7 @@ typedef struct Motor;
 
 typedef struct MotorHolder;
 
-extern static volatile MotorHolder * motors = NULL;
+extern volatile MotorHolder * motors = NULL;
 
 typedef char MotorFD;
 

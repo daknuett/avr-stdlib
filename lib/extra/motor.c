@@ -1,12 +1,7 @@
-#define __DEV_M168_
 #include<pins.h>
-#define F_CPU 1000000ul
-#define BAUD 1200
 #include<util/delay.h>
-#include<stdio.h>
-#include<usart.h>
-#include<usart_io.h>
 #include<stdlib.h>
+#include<wait.h>
 
 #define MAX_MOTORS 4
 
@@ -24,7 +19,7 @@ typedef struct
 }
 MotorHolder;
 
-static volatile MotorHolder * motors = NULL;
+volatile MotorHolder * motors = NULL;
 
 typedef char MotorFD;
 

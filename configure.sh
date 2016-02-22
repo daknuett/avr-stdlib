@@ -36,7 +36,7 @@ printf 'm168_CFLAG = -I $(INCDIR) -mmcu=atmega168 -O -o  \nm8_CFLAG = -I $(INCDI
 
 printf 'extra_ONEWIRE = $(extra_LIBDIR)/one_wire.o\nm168_LCD = $(m168_LIBDIR)/lcd.o\nm8_LCD = $(m8_LIBDIR)/lcd.o\nm168_LCD_IO = $(m168_LIBDIR)/lcd_io.o\nm8_LCD_IO = $(m8_LIBDIR)/lcd_io.o\n' >> config/Makefile.inc
 
-printf 'extra_WAIT = $(extra_LIBDIR)/wait.o\n' >> config/Makefile.inc
+printf 'extra_WAIT = $(extra_LIBDIR)/wait.o \nextra_BL3_MOTOR = $(extra_LIBDIR)/brushless3.o\n' >> config/Makefile.inc
 
 function use_m168()
 {
@@ -44,6 +44,7 @@ function use_m168()
 	printf 'LIBDIR = $(m168_LIBDIR)\nCFLAG = $(m168_CFLAG)\nLIBS = $(m168_LIBS)\nUSART = $(m168_USART)\nUSART_IO = $(m168_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(m168_LCD)\nLCD_IO = $(m168_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m168\n" >> config/Makefile.inc
 	printf "MMCU = atmega168\n" >> config/device
+	printf "#define __DEV_M168_\n" >> config/config.h
 }
 function use_m8()
 {
@@ -51,6 +52,7 @@ function use_m8()
 	printf 'LIBDIR = $(m8_LIBDIR)\nCFLAG = $(m8_CFLAG)\nLIBS = $(m8_LIBS)\nUSART = $(m8_USART)\nUSART_IO = $(m8_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(m8_LCD)\nLCD_IO = $(m18_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m8\n" >> config/Makefile.inc
 	printf "MMCU = atmega8\n" >> config/device
+	printf "#define __DEV_M8_\n" >> config/config.h
 }
 
 printf "use select device:\nm8 \tatmega8\nm168\tatmega168\ndevice:  "
@@ -107,6 +109,14 @@ if [[ "$link_wait" == "y" ]]
 then
 	printf 'LIBS += $(extra_WAIT)\n' >> config/Makefile.inc
 fi
+
+printf "link to bl3_motor? "
+read link_bl3_motor
+if [[ "$link_bl3_motor" == "y" ]]
+then
+	printf 'LIBS += $(extra_BL3_MOTOR)\n' >> config/Makefile.inc
+fi
+
 
 printf "\n\n\n"
 printf "Vref for analog input:\n"
