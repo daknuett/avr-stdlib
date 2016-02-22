@@ -1,0 +1,10 @@
+# any object file
+**/*.o
+# any library
+**/*.a
+# any compiled header
+**/*.gch
+
+# elfs
+**/*.elf
+
