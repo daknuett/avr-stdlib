@@ -1,5 +1,6 @@
 #ifndef __LCD_H_
 #define __LCD_H_
+/* vim: set syntax=c: */
 
 extern void lcd_setb(char __b);
 extern void lcd_trig_en(void);

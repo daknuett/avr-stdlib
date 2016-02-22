@@ -24,6 +24,7 @@
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 */
 
+/* vim: set syntax=c: */
 
 #ifndef __CALCULATIONS_H_
 #define __CALCULATIONS_H_
