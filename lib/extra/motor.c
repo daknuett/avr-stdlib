@@ -1,7 +1,7 @@
 #include<pins.h>
 #include<util/delay.h>
 #include<stdlib.h>
-#include<wait.h>
+#include<extra/wait.h>
 
 #define MAX_MOTORS 4
 
