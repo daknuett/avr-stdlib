@@ -1,5 +1,5 @@
-m168_CFLAG = -I $(INCDIR) -mmcu=atmega168 -O -o  
-m8_CFLAG = -I $(INCDIR) -mmcu=atmega8 -O -o  
+m168_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega168 -O -o  
+m8_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega8 -O -o  
  
  
 m168_LIBDIR= $(std_LIBDIR)/m168
@@ -32,4 +32,4 @@ ONEWIRE = $(extra_ONEWIRE)
 LCD = $(m168_LCD)
 LCD_IO = $(m168_LCD_IO)
 DEVICE = m168
-LIBS += $(extra_BL3_MOTOR)
+LIBS += $(USART) $(USART_IO)

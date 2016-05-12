@@ -29,6 +29,7 @@
 // for interrupt driven usart
 #include<avr/interrupt.h>
 #include<avr/io.h>
+#include<util/atomic.h>
 
 
 /* POLL MODE */
@@ -119,19 +120,27 @@ volatile int TX_bytes = 0;
 
 void FIFO_buffer_putc(volatile FIFO_buffer *  buffer,char chr)
 {
-	int pos = buffer->head % IO_BUF_S;
-	if(pos == buffer->tail - 1)
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
 	{
-		return;
+		int pos = buffer->head % IO_BUF_S;
+		if(pos == buffer->tail - 1)
+		{
+			return;
+		}
+		buffer->buffer[pos] = chr;
+		buffer->head = ( buffer->head + 1) % IO_BUF_S;
 	}
-	buffer->buffer[pos] = chr;
-	buffer->head = ( buffer->head + 1) % IO_BUF_S;
 }
 char FIFO_buffer_getc(volatile FIFO_buffer * buffer)
 {
-	int pos = buffer->tail % IO_BUF_S;
-	buffer->tail = (pos + 1) % IO_BUF_S;
-	return buffer->buffer[pos];
+	char res;
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		int pos = buffer->tail % IO_BUF_S;
+		buffer->tail = (pos + 1) % IO_BUF_S;
+		res = buffer->buffer[pos];
+	}
+	return res;
 }
 
 ISR(USART_RX_vect)

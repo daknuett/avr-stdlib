@@ -32,7 +32,7 @@ fi
 
 echo "generating config/Makefile.inc"
 
-printf 'm168_CFLAG = -I $(INCDIR) -mmcu=atmega168 -O -o  \nm8_CFLAG = -I $(INCDIR) -mmcu=atmega8 -O -o  \n \n \nm168_LIBDIR= $(std_LIBDIR)/m168\n \nm8_LIBDIR= $(std_LIBDIR)/m8\n \nm168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o\n \nm8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o\n \nm168_USART= $(m168_LIBDIR)/usart.o \nm8_USART= $(m8_LIBDIR)/usart.o\n \nm8_USART_IO= $(m8_LIBDIR)/usart_io.o \nm168_USART_IO= $(m168_LIBDIR)/usart_io.o\nextra_LIBDIR = $(std_LIBDIR)/extra\n ' > config/Makefile.inc
+printf 'm168_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega168 -O -o  \nm8_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega8 -O -o  \n \n \nm168_LIBDIR= $(std_LIBDIR)/m168\n \nm8_LIBDIR= $(std_LIBDIR)/m8\n \nm168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o\n \nm8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o\n \nm168_USART= $(m168_LIBDIR)/usart.o \nm8_USART= $(m8_LIBDIR)/usart.o\n \nm8_USART_IO= $(m8_LIBDIR)/usart_io.o \nm168_USART_IO= $(m168_LIBDIR)/usart_io.o\nextra_LIBDIR = $(std_LIBDIR)/extra\n ' > config/Makefile.inc
 
 printf 'extra_ONEWIRE = $(extra_LIBDIR)/one_wire.o\nm168_LCD = $(m168_LIBDIR)/lcd.o\nm8_LCD = $(m8_LIBDIR)/lcd.o\nm168_LCD_IO = $(m168_LIBDIR)/lcd_io.o\nm8_LCD_IO = $(m8_LIBDIR)/lcd_io.o\n' >> config/Makefile.inc
 

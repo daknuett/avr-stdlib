@@ -1,11 +1,11 @@
-CC=avr-gcc
-INCDIR= `pwd`/../../include
+CC = avr-gcc
+INCDIR = `pwd`/../../include
 
-CFLAG= -I $(INCDIR) -mmcu=atmega168 -O -o
-CLFLAG= -c $(CFLAG)
+CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega168 -O -o
+CLFLAG = -std=gnu99 -c $(CFLAG)
 
 include config/project_config
-HFLAG= -mmcu=atmega168
+HFLAG = -mmcu=atmega168
 
 objects = digital.o analog.o usart.o  lcd.o
 

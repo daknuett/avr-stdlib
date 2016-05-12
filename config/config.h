@@ -9,5 +9,5 @@
 #define ONE_WIRE_PINNO PB0
 #endif
 #define __USE_V_AVCC_
-#define F_CPU 1000000ul
+#define F_CPU 1000000
 #endif
