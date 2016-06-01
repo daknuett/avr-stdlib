@@ -32,4 +32,4 @@ ONEWIRE = $(extra_ONEWIRE)
 LCD = $(m168_LCD)
 LCD_IO = $(m168_LCD_IO)
 DEVICE = m168
-LIBS += $(extra_BL3_MOTOR)
+LIBS += $(USART) $(USART_IO)

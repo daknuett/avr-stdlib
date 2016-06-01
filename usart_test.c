@@ -16,13 +16,13 @@
 void setup(void)
 {
 	usart_begin(UBRR_VAL);
+	/*
 	pin_mode(4,PIN_OUT);
-	//pin_mode(2,PIN_OUT);
-	//pin_mode(3,PIN_OUT);
 	pin_mode(15,PIN_OUT);
 	write_pin(4,HIGH);
 	_delay_ms(1000);
 	write_pin(4,LOW);
+	*/
 }
 
 void loop(void)

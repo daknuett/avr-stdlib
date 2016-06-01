@@ -41,7 +41,7 @@
 #define F_CPU 1000000ul
 #endif
 
-#define UBRR_VAL (F_CPU/8/BAUD-1)/2
+#define UBRR_VAL (F_CPU/ 8.0/ (BAUD-1) )/2
 
 #if defined(USART_POLL_MODE)
 extern void usart_begin(unsigned int ubrr);
