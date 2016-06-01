@@ -28,6 +28,7 @@
 #include<avr/io.h>
 
 #include"pin_defs.h"
+#include<digital.h>
 
 /* Routinen fuer analoges Schreiben und Lesen */
 

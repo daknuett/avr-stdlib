@@ -32,22 +32,19 @@
 #include<avr/io.h>
 
 /* routines to set pins */
-
+#include<digital.h>
 #define PIN_OUT 1
 #define PIN_IN	0
 
-extern void pin_mode(unsigned char pin, unsigned char mode);
 
 #define HIGH	1
 #define LOW	0
 
-extern void write_pin(unsigned char pin, unsigned char value);
 
 #define STD	1
 #define	POLL	2
 #define DOUBLE_POLL	3
 
-extern unsigned char read_pin(unsigned char pin);
 
 extern unsigned char get_pin(unsigned char pin, unsigned char mode);
 
