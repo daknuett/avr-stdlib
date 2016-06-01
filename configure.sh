@@ -43,7 +43,7 @@ function use_m168()
 	echo "using m168"
 	printf 'LIBDIR = $(m168_LIBDIR)\nCFLAG = $(m168_CFLAG)\nLIBS = $(m168_LIBS)\nUSART = $(m168_USART)\nUSART_IO = $(m168_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(m168_LCD)\nLCD_IO = $(m168_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m168\n" >> config/Makefile.inc
-	printf "MMCU = atmega168\n" >> config/device
+	printf "MMCU = atmega168\n" > config/device
 	printf "#define __DEV_M168_\n" >> config/config.h
 }
 function use_m8()
@@ -51,7 +51,7 @@ function use_m8()
 	echo "using m8"
 	printf 'LIBDIR = $(m8_LIBDIR)\nCFLAG = $(m8_CFLAG)\nLIBS = $(m8_LIBS)\nUSART = $(m8_USART)\nUSART_IO = $(m8_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(m8_LCD)\nLCD_IO = $(m18_LCD_IO)\n' >> config/Makefile.inc
 	printf "DEVICE = m8\n" >> config/Makefile.inc
-	printf "MMCU = atmega8\n" >> config/device
+	printf "MMCU = atmega8\n" > config/device
 	printf "#define __DEV_M8_\n" >> config/config.h
 }
 
