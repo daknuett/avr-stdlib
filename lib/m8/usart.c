@@ -130,7 +130,7 @@ char FIFO_buffer_getc(volatile FIFO_buffer * buffer)
 	return buffer->buffer[pos];
 }
 
-ISR(USART_RX_vect)
+ISR(USART_RXC_vect)
 {
 	FIFO_buffer_putc(&RX_buf,UDR);
 	RX_bytes++;
