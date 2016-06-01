@@ -1,4 +1,5 @@
 MMCU = atmega168
+<<<<<<< HEAD
 MMCU = atmega168
 MMCU = atmega168
 MMCU = atmega168
@@ -15,3 +16,5 @@ MMCU = atmega168
 MMCU = atmega168
 MMCU = atmega168
 MMCU = atmega168
+=======
+>>>>>>> 99c744113885bde144ced8613b583ce7db537323
