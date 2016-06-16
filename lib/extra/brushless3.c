@@ -77,12 +77,12 @@ BL3MotorFD _bl3_add_motor(char current,
 void bl3_motor_turn_off(BL3MotorFD motor)
 {
 	BL3Motor * mymot =  bl3_motors->motors[motor];
-	write_pin(mymot->pin_1_H,LOW);
-	write_pin(mymot->pin_1_L,LOW);
-	write_pin(mymot->pin_2_H,LOW);
-	write_pin(mymot->pin_2_L,LOW);
-	write_pin(mymot->pin_3_H,LOW);
-	write_pin(mymot->pin_3_L,LOW);
+	write_pin(mymot->pin_1_H, LOW);
+	write_pin(mymot->pin_1_L, LOW);
+	write_pin(mymot->pin_2_H, LOW);
+	write_pin(mymot->pin_2_L, LOW);
+	write_pin(mymot->pin_3_H, LOW);
+	write_pin(mymot->pin_3_L, LOW);
 
 }
 
@@ -114,38 +114,38 @@ void bl3_motor_step(BL3MotorFD motor)
 	{
 		case (0):
 		{
-			write_pin(mymot->pin_1_H,HIGH);
-			write_pin(mymot->pin_2_L,HIGH);
+			write_pin(mymot->pin_1_H, HIGH);
+			write_pin(mymot->pin_2_L, HIGH);
 			mymot->status++;
 		}break;
 		case (1):
 		{
-			write_pin(mymot->pin_3_H,HIGH);
-			write_pin(mymot->pin_2_L,HIGH);
+			write_pin(mymot->pin_3_H, HIGH);
+			write_pin(mymot->pin_2_L, HIGH);
 			mymot->status++;
 		}break;
 		case (2):
 		{
-			write_pin(mymot->pin_3_H,HIGH);
-			write_pin(mymot->pin_1_L,HIGH);
+			write_pin(mymot->pin_3_H, HIGH);
+			write_pin(mymot->pin_1_L, HIGH);
 			mymot->status++;
 		}break;
 		case (3):
 		{
-			write_pin(mymot->pin_2_H,HIGH);
-			write_pin(mymot->pin_1_L,HIGH);
+			write_pin(mymot->pin_2_H, HIGH);
+			write_pin(mymot->pin_1_L, HIGH);
 			mymot->status++;
 		}break;
 		case (4):
 		{
-			write_pin(mymot->pin_2_H,HIGH);
-			write_pin(mymot->pin_3_L,HIGH);
+			write_pin(mymot->pin_2_H, HIGH);
+			write_pin(mymot->pin_3_L, HIGH);
 			mymot->status++;
 		}break;
 		case (5):
 		{
-			write_pin(mymot->pin_1_H,HIGH);
-			write_pin(mymot->pin_3_L,HIGH);
+			write_pin(mymot->pin_1_H, HIGH);
+			write_pin(mymot->pin_3_L, HIGH);
 			mymot->status = 0;
 		}break;
 		default:
