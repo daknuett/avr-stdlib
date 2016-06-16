@@ -11,10 +11,6 @@ int main(void)
 	while(1)
 	{
 		bl3_motor_step(my_motor);
-		write_pin(11,HIGH);
-		_delay_ms(900);
-		bl3_motor_turn_off(my_motor);
-		write_pin(11,LOW);
-		_delay_ms(4000);
+		_delay_ms(90);
 	}
 }
