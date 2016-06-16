@@ -76,7 +76,7 @@ BL3MotorFD _bl3_add_motor(char current,
 }
 void bl3_motor_turn_off(BL3MotorFD motor)
 {
-	BL3Motor * mymot =  bl3_motors->motors[bl3_motors->num_motors - 1];
+	BL3Motor * mymot =  bl3_motors->motors[motor];
 	write_pin(mymot->pin_1_H,LOW);
 	write_pin(mymot->pin_1_L,LOW);
 	write_pin(mymot->pin_2_H,LOW);
@@ -100,13 +100,14 @@ BL3MotorFD bl3_motor_begin(char current,
 	BL3MotorFD mymot =  _bl3_add_motor(current, pin_1_H, pin_1_L, pin_2_H, pin_2_L, pin_3_H, pin_3_L);
 	// prevent unexpected stuff
 	bl3_motor_turn_off(mymot);
+	return mymot;
 }
 
 
 void bl3_motor_step(BL3MotorFD motor)
 {
 
-	BL3Motor * mymot =  bl3_motors->motors[bl3_motors->num_motors - 1];
+	BL3Motor * mymot =  bl3_motors->motors[motor];
 	bl3_motor_turn_off(motor);
 	analog_write(mymot->pin_current, mymot->current);
 	switch(mymot->status)
@@ -157,6 +158,6 @@ void bl3_motor_step(BL3MotorFD motor)
 
 void bl3_motor_current_select(BL3MotorFD motor, char current)
 {
-	BL3Motor * mymot =  bl3_motors->motors[bl3_motors->num_motors - 1];
+	BL3Motor * mymot =  bl3_motors->motors[motor];
 	mymot->current = current;
 }
