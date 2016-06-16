@@ -32,13 +32,14 @@
 
 typedef struct
 {
-	char current, // PWM current select
+	char pin_current, // PWM current select
 	     pin_1_H, // winding 1 HIGH
 	     pin_1_L, // winding 2 LOW
 	     pin_2_H, // ...
 	     pin_2_L,
 	     pin_3_H,
 	     pin_3_L;
+	char current;
 	char status; // the current status of the rotor
 }
 BL3Motor;
@@ -60,7 +61,8 @@ BL3MotorFD _bl3_add_motor(char current,
 		char pin_3_H, char pin_3_L)
 {
 	BL3Motor * new_motor = malloc(sizeof(BL3Motor));
-	new_motor->current = current;
+	new_motor->pin_current = current;
+	new_motor->current = 255;
 	new_motor->pin_1_H = pin_1_H;
 	new_motor->pin_1_L = pin_1_L;
 	new_motor->pin_2_H = pin_2_H;
@@ -106,7 +108,7 @@ void bl3_motor_step(BL3MotorFD motor)
 
 	BL3Motor * mymot =  bl3_motors->motors[bl3_motors->num_motors - 1];
 	bl3_motor_turn_off(motor);
-	analog_write(mymot->current,255);
+	analog_write(mymot->pin_current, mymot->current);
 	switch(mymot->status)
 	{
 		case (0):
@@ -151,4 +153,10 @@ void bl3_motor_step(BL3MotorFD motor)
 			mymot->status = 0;
 		}
 	}
+}
+
+void bl3_motor_current_select(BL3MotorFD motor, char current)
+{
+	BL3Motor * mymot =  bl3_motors->motors[bl3_motors->num_motors - 1];
+	mymot->current = current;
 }

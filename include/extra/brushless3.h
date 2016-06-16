@@ -37,4 +37,5 @@ BL3MotorFD bl3_motor_begin(char current,
 		char pin_3_H, char pin_3_L);
 
 void bl3_motor_step(BL3MotorFD motor);
+void bl3_motor_current_select(BL3MotorFD motor, char current);
 #endif
