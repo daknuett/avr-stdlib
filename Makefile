@@ -17,7 +17,7 @@ libs:
 
 
 CONFIGDIR = `pwd`/config
-SUBCONFIGDIRS = lib/m168/config lib/m8/config lib/config lib/extra/config
+SUBCONFIGDIRS = lib/m168/config lib/m8/config lib/config lib/extra/config lib/m644/config
 SUBCONFIG_LINKS = $(addsuffix /project_config,$(SUBCONFIGDIRS)) 
 
 init_mkdirs: $(SUBCONFIGDIRS)
