@@ -55,8 +55,8 @@ void usart_begin(unsigned int ubrr)
 	UCSR0B = ( 1 << RXEN0 )|( 1 << TXEN0 );
 
 	// frame format
-	// 1 byte data, 1 stop bit
-	UCSR0C = ( 1 << UCSZ00) | ( 1 << UCSZ01);
+	// 1 byte data, 2 stop bit
+	UCSR0C = ( 1 << USBS0) | ( 0b11 << UCSZ00);
 }
 
 void usart_putc(char chr)
@@ -93,14 +93,12 @@ void usart_begin(unsigned int ubrr)
 	UBRR0L = (unsigned char) ( ubrr );
 
 	// enable RX and TX
-	UCSR0B = ( 1 << RXEN0 )|( 1 << TXEN0 );
+	UCSR0B = ( 1 << RXEN0 )|( 1 << TXEN0 ) | ( 1 << RXCIE0 ) | ( 1 << UDRIE0 );
 
 	// frame format
-	// 1 byte data, 1 stop bit
-	UCSR0C = ( 1 << UCSZ00) | ( 1 << UCSZ01);
+	// 1 byte data, 2 stop bit
+	UCSR0C = ( 0b11 << UCSZ00) | ( 1 << USBS0);
 
-	// enable interrupt channels
-	UCSR0B |= ( 1 << RXCIE0 ) | ( 1 << UDRIE0 );
 	sei();
 }
 

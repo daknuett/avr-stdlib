@@ -34,6 +34,8 @@ echo "generating config/Makefile.inc"
 
 printf 'm168_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega168 -O -o  \nm8_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega8 -O -o  \n \n \nm168_LIBDIR= $(std_LIBDIR)/m168\n \nm8_LIBDIR= $(std_LIBDIR)/m8\n \nm168_LIBS= $(m168_LIBDIR)/digital.o $(m168_LIBDIR)/analog.o $(m168_LIBDIR)/pins.o\n \nm8_LIBS= $(m8_LIBDIR)/digital.o $(m8_LIBDIR)/analog.o $(m8_LIBDIR)/pins.o\n \nm168_USART= $(m168_LIBDIR)/usart.o \nm8_USART= $(m8_LIBDIR)/usart.o\n \nm8_USART_IO= $(m8_LIBDIR)/usart_io.o \nm168_USART_IO= $(m168_LIBDIR)/usart_io.o\nextra_LIBDIR = $(std_LIBDIR)/extra\n ' > config/Makefile.inc
 
+printf 'm644_CFLAG = -std=gnu99 -I $(INCDIR) -mmcu=atmega644 -O -o  \n \nm644_LIBDIR= $(std_LIBDIR)/m644\n \nm644_LIBS= $(m644_LIBDIR)/digital.o $(m644_LIBDIR)/analog.o $(m644_LIBDIR)/pins.o\n m644_USART= $(m644_LIBDIR)/usart.o \n\nm644_USART_IO= $(m644_LIBDIR)/usart_io.o\n' >> config/Makefile.inc
+
 printf 'extra_ONEWIRE = $(extra_LIBDIR)/one_wire.o\nextra_LCD = $(extra_LIBDIR)/lcd.o\nextra_LCD_IO = $(extra_LIBDIR)/lcd_io.o\n' >> config/Makefile.inc
 
 printf 'extra_WAIT = $(extra_LIBDIR)/wait.o \nextra_BL3_MOTOR = $(extra_LIBDIR)/brushless3.o\n' >> config/Makefile.inc
@@ -46,6 +48,14 @@ function use_m168()
 	printf "MMCU = atmega168\n" > config/device
 	printf "#define __DEV_M168_\n" >> config/config.h
 }
+function use_m644()
+{
+	echo "using m644"
+	printf 'LIBDIR = $(m644_LIBDIR)\nCFLAG = $(m644_CFLAG)\nLIBS = $(m644_LIBS)\nUSART = $(m644_USART)\nUSART_IO = $(m644_USART_IO)\nONEWIRE = $(extra_ONEWIRE)\nLCD = $(extra_LCD)\nLCD_IO = $(extra_LCD_IO)\n' >> config/Makefile.inc
+	printf "DEVICE = m644\n" >> config/Makefile.inc
+	printf "MMCU = atmega644\n" > config/device
+	printf "#define __DEV_M644_\n" >> config/config.h
+}
 function use_m8()
 {
 	echo "using m8"
@@ -55,11 +65,12 @@ function use_m8()
 	printf "#define __DEV_M8_\n" >> config/config.h
 }
 
-printf "use select device:\nm8 \tatmega8\nm168\tatmega168\ndevice:  "
+printf "use select device:\nm8 \tatmega8\nm168\tatmega168\nm644\tatmega644\ndevice:  "
 read dev
 case $dev in
 	"m8") use_m8 ;;
 	"m168") use_m168 ;;
+	"m644")use_m644 ;;
 
 esac
 

@@ -4,12 +4,15 @@ CFLAG= -I $(INCDIR) -O -o
 CLFLAG= -c $(CFLAG)
 
 
-all: pins  usart_m168 usart_m8 lcd_m168 lcd_m8 lib_extra
+all: pins  usart_m168 usart_m8 lib_extra usart_m644
 
-pins:devices pins_m8 pins_m168
+pins:devices pins_m8 pins_m168 pins_m644
 	echo "compiled">/dev/null
 
 
+pins_m644:
+	$(CC) -mmcu=atmega644  $(CLFLAG) pins.o pins.c &&\
+	mv pins.o m644/pins.o
 pins_m168:
 	$(CC) -mmcu=atmega168  $(CLFLAG) pins.o pins.c &&\
 	mv pins.o m168/pins.o
@@ -17,22 +20,21 @@ pins_m8:
 	$(CC) -mmcu=atmega8  $(CLFLAG) pins.o pins.c && \
 	mv pins.o m8/pins.o
 
+usart_m644:
+	$(CC) -mmcu=atmega644 $(CLFLAG) usart_io.o usart_io.c &&\
+	mv usart_io.o m644/usart_io.o
 usart_m168:
 	$(CC) -mmcu=atmega168 $(CLFLAG) usart_io.o usart_io.c &&\
 	mv usart_io.o m168/usart_io.o
 usart_m8:
 	$(CC) -mmcu=atmega8 $(CLFLAG) usart_io.o usart_io.c &&\
 	mv usart_io.o m8/usart_io.o
-lcd_m168:
-	$(CC) -mmcu=atmega168 $(CLFLAG) lcd_io.o lcd_io.c &&\
-	mv lcd_io.o m168/lcd_io.o
-lcd_m8:
-	$(CC) -mmcu=atmega8 $(CLFLAG) lcd_io.o lcd_io.c &&\
-	mv lcd_io.o m8/lcd_io.o
 
 	
-devices:lib_m168 lib_m8
+devices:lib_m168 lib_m8 lib_m644
 
+lib_m644:                             
+	cd m644 && make && cd ..
 lib_m168:                             
 	cd m168 && make && cd ..
 lib_m8:
@@ -41,6 +43,7 @@ lib_m8:
 clean: 
 	cd m8 && make clean && cd .. &&\
 	cd m168 && make clean && cd .. &&\
+	cd m644 && make clean && cd .. &&\
 	cd extra && make clean && cd ..
 lib_extra:
 	cd extra && make && cd ..

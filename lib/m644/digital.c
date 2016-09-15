@@ -90,3 +90,30 @@ void write_pin(unsigned char pin, unsigned char value)
 		
 	}
 }
+unsigned char read_pin(unsigned char pin)
+{
+	pin_mode(pin,PIN_IN);
+	if(pin < 9)
+	{
+		pin -= 1;
+		return PORTB & (1 << pin);
+	}
+	if(pin > 13 && pin < 22)
+	{
+		pin -= 14;
+		return PORTD & (1 << pin);
+		
+	}
+	if(pin > 21 && pin < 30)
+	{
+		pin -= 22;
+		return PORTC & (1 << pin);
+		
+	}
+	if(pin > 32 && pin < 41)
+	{
+		pin -= 33;
+		return PORTA & (1 << pin);
+		
+	}
+}

@@ -27,6 +27,7 @@
 
 
 #include<stdio.h>
+#include<extra/lcd.h>
 
 void lcd_fputc(char _c, FILE * stream)
 {

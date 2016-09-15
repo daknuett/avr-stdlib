@@ -65,6 +65,8 @@ extern unsigned int analog_get(unsigned char pin,unsigned char mode);
 #include"pins_m168.h"
 #elif defined( __DEV_M8_)
 #include"pins_m8.h"
+#elif defined( __DEV_M644_)
+#include"pins_m644.h"
 #else
 #error "no valid device ( like __DEV_M168_ ) defined!"
 #endif
